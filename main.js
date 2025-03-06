@@ -36,3 +36,41 @@ function searchDestination() {
         })
         .catch(error => console.error("Erreur lors de la récupération des données :", error));
 }
+
+// Attendre que le DOM soit complètement chargé
+document.addEventListener('DOMContentLoaded', function () {
+    // Gestion des boutons de la barre de navigation
+    const loginBtn = document.getElementById('loginBtn');
+    const signupBtn = document.getElementById('signupBtn');
+
+    // Redirection vers la page de connexion
+    if (loginBtn) {
+        loginBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            window.location.href = 'login.html';
+        });
+    }
+
+    // Redirection vers la page d'inscription
+    if (signupBtn) {
+        signupBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            window.location.href = 'inscription.html';
+        });
+    }
+
+    // Gestion du lien "Pas encore membre ?" sur la page de connexion
+    const signupLink = document.querySelector('.signup-link a');
+    if (signupLink) {
+        signupLink.addEventListener('click', function (e) {
+            e.preventDefault();
+            window.location.href = 'inscription.html';
+        });
+    }
+
+    // Ajout d'un écouteur d'événements pour le bouton de recherche
+    const searchButton = document.getElementById('searchButton');
+    if (searchButton) {
+        searchButton.addEventListener('click', searchDestination);
+    }
+});
