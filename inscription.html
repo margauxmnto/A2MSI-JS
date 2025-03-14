@@ -1,92 +1,60 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inscription - Voyage Explorer</title>
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <!-- Votre CSS personnalisé -->
-    <link rel="stylesheet" href="styles.css">
-    <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-        .signup-container {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #f0f0f0;
-        }
-        .signup-form {
-            background-color: white;
-            padding: 2rem;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            width: 300px;
-        }
-        .signup-form input {
-            display: block;
-            width: 100%;
-            margin-bottom: 1rem;
-            padding: 0.5rem;
-        }
-        .signup-form button {
-            width: 100%;
-            padding: 0.5rem;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-        .login-link {
-            text-align: center;
-            margin-top: 1rem;
-        }
-    </style>
+    <title>Inscription</title>
 </head>
+
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container">
-            <a class="navbar-brand" href="#">Voyage Explorer</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" title="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="index.html">Accueil</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Destinations</a></li>
-                    <li class="nav-item"><a class="nav-link" href="connexion.html">Connexion</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
 
-    <div class="signup-container">
-        <div class="signup-form">
-            <h2>Inscription</h2>
-            <form>
-                <input type="text" placeholder="Nom" required>
-                <input type="text" placeholder="Prénom" required>
-                <input type="email" placeholder="Email" required>
-                <input type="password" placeholder="Mot de passe" required>
-                <input type="password" placeholder="Confirmer le mot de passe" required>
-                <button type="submit">S'inscrire</button>
-            </form>
-            <div class="login-link">
-                <p>Déjà membre ? <a href="connexion.html">Se connecter</a></p>
-            </div>
-        </div>
-    </div>
+    <h2>Inscription</h2>
+    <form id="inscriptionForm">
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="password" id="password" placeholder="Mot de passe" required>
+        <label for="role">Rôle:</label>
+        <select id="role">
+            <option value="user">Utilisateur</option>
+            <option value="admin">Administrateur</option>
+        </select>
+        <button type="submit">S'inscrire</button>
+    </form>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Votre script personnalisé -->
-    <script src="script.js"></script>
+    <!-- Intégration de Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js"></script>
+    <script src="firebase.js"></script> <!-- Fichier de config Firebase -->
+
+    <script>
+        document.getElementById("inscriptionForm").addEventListener("submit", function (event) {
+            event.preventDefault(); // Empêche le rechargement de la page
+
+            let email = document.getElementById("email").value;
+            let password = document.getElementById("password").value;
+            let role = document.getElementById("role").value;
+
+            // Création de l’utilisateur avec Firebase Authentication
+            firebase.auth().createUserWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    let userId = userCredential.user.uid;
+
+                    // Enregistrer l’utilisateur dans la base de données Firebase
+                    firebase.database().ref('users/' + userId).set({
+                        email: email,
+                        role: role
+                    });
+
+                    alert("Inscription réussie !");
+                    window.location.href = "connexion.html"; // Redirection vers la connexion
+                })
+                .catch((error) => {
+                    alert("Erreur : " + error.message);
+                });
+        });
+    </script>
+
 </body>
+
 </html>
