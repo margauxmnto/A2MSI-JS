@@ -21,14 +21,14 @@
                 window.location.href = "connexion.html";
             }
         });
-
+    
         document.getElementById("logout").addEventListener("click", function() {
             firebase.auth().signOut().then(() => {
                 alert("Déconnexion réussie !");
                 window.location.href = "connexion.html";
             });
         });
-    </script>
+    </script>    
 
 </body>
 </html>
