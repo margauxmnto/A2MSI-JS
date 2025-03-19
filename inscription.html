@@ -8,7 +8,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <!-- Votre CSS personnalisé -->
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="inscription.css">
 </head>
 
 <body>
@@ -36,7 +36,6 @@
                 <input type="text" id="nom" class="form-control mb-3" placeholder="Nom" required>
                 <input type="text" id="prenom" class="form-control mb-3" placeholder="Prénom" required>
                 <input type="email" id="email" class="form-control mb-3" placeholder="Email" required>
-                <label for="role" class="form-label">Rôle</label>
                 <select id="role" class="form-select mb-3" required>
                     <option value="" disabled selected>Rôle</option>
                     <option value="user">Utilisateur</option>
@@ -51,65 +50,6 @@
             </div>
         </div>
     </div>
-
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
-        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
-        import { firebaseConfig } from "./firebase-config.js";
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const database = getDatabase(app);
-
-        document.getElementById("inscriptionForm").addEventListener("submit", function(event) {
-            event.preventDefault(); // Empêche le rechargement de la page
-
-            let nom = document.getElementById("nom").value;
-            let prenom = document.getElementById("prenom").value;
-            let email = document.getElementById("email").value;
-            let role = document.getElementById("role").value;
-            let password = document.getElementById("password").value;
-            let confirmPassword = document.getElementById("confirmPassword").value;
-
-            if (password !== confirmPassword) {
-                alert("Les mots de passe ne correspondent pas.");
-                return;
-            }
-
-            console.log("Email:", email);
-            console.log("Password:", password);
-
-            // Création de l’utilisateur avec Firebase Authentication
-            createUserWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    let userId = userCredential.user.uid;
-
-                    console.log("Utilisateur créé avec succès :", userId);
-
-                    // Enregistrer l’utilisateur dans la base de données Firebase
-                    set(ref(database, 'users/' + userId), {
-                        nom: nom,
-                        prenom: prenom,
-                        email: email,
-                        role: role
-                    })
-                    .then(() => {
-                        console.log("Utilisateur enregistré dans la base de données.");
-                        alert("Inscription réussie !");
-                        window.location.href = "connexion.html"; // Redirection vers la connexion
-                    })
-                    .catch((error) => {
-                        console.error("Erreur lors de l'enregistrement dans la base de données :", error);
-                        alert("Erreur lors de l'enregistrement dans la base de données : " + error.message);
-                    });
-                })
-                .catch((error) => {
-                    console.error("Erreur lors de la création de l'utilisateur :", error);
-                    alert("Erreur lors de la création de l'utilisateur : " + error.message);
-                });
-        });
-    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
